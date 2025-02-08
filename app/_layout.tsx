@@ -1,39 +1,117 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { StatusBar } from 'expo-status-bar';
-import { useEffect } from 'react';
-import 'react-native-reanimated';
+import React, { useState, useEffect, useRef } from 'react';
+import axios from 'axios';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import PieChart from './(tabs)/PieChart';
+import './Layout.css';
 
-import { useColorScheme } from '@/hooks/useColorScheme';
+// Register the necessary components
+ChartJS.register(ArcElement, Tooltip, Legend);
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
+const Layout: React.FC = ({ children }) => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [comment, setComment] = useState('');
+  const menuRef = useRef<HTMLDivElement>(null);
+  const audioRef = useRef<HTMLAudioElement>(null);
 
-export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  });
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
+  const handleClickOutside = (event: MouseEvent) => {
+    if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+      setIsMenuOpen(false);
+    }
+  };
 
   useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
+    if (isMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside);
     }
-  }, [loaded]);
 
-  if (!loaded) {
-    return null;
-  }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isMenuOpen]);
+
+  // Replace with actual user ID
+  const userId = 'user123';
+
+  useEffect(() => {
+    // Fetch comment from Gemini API when the component mounts
+    const fetchComment = async () => {
+      try {
+        const response = await axios.get('https://api.gemini.com/v1/comment'); // Replace with the actual Gemini API endpoint
+        setComment(response.data.comment);
+      } catch (error) {
+        console.error('Error fetching comment from Gemini API:', error);
+      }
+    };
+
+    fetchComment();
+  }, []);
+
+  const playMusic = () => {
+    if (audioRef.current) {
+      audioRef.current.play();
+    }
+  };
+
+  const pauseMusic = () => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+    }
+  };
+
+  const stopMusic = () => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+    }
+  };
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+    <div className="container">
+      <header className="header">
+        <button onClick={toggleMenu}>Profile</button>
+      </header>
+      <main className="main">
+        {/* Large Gen AI text */}
+        <h1 style={{ fontSize: '48px', marginBottom: '20px' }}>Gen AI</h1>
+        {/* Display the fetched comment */}
+        <p>{comment}</p>
+        {/* Comment about connecting to Gemini API */}
+        {/* This is where we need to connect to the Gemini API to fetch usage of time */}
+        <PieChart userId={userId} />
+        <div className="leaderboard">
+          <h2>Leaderboard</h2>
+          <ul>
+            <li>Player 1 - 100 points</li>
+            <li>Player 2 - 90 points</li>
+            <li>Player 3 - 80 points</li>
+          </ul>
+        </div>
+      </main>
+      <div
+        ref={menuRef}
+        className={`slide-in-menu ${isMenuOpen ? 'open' : ''}`}
+      >
+        <h2>Menu</h2>
+        <ul>
+          <li><button onClick={() => alert('Profile clicked')}>Profile</button></li>
+          <li><button onClick={() => alert('Channel clicked')}>Channel</button></li>
+          <li><button onClick={() => alert('Setting clicked')}>Setting</button></li>
+        </ul>
+      </div>
+      <div className="music-controls">
+        <button onClick={playMusic}>Play</button>
+        <button onClick={pauseMusic}>Pause</button>
+        <button onClick={stopMusic}>Stop</button>
+      </div>
+      <audio ref={audioRef} src="path/to/your/music/file.mp3" />
+    </div>
   );
-}
+};
+
+export default Layout;
