@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
-import { Pie } from 'react-chartjs-2';
+import PieChart from './(tabs)/PieChart';
 import './Layout.css';
 
 // Register the necessary components
@@ -34,6 +34,9 @@ const Layout: React.FC = ({ children }) => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [isMenuOpen]);
+
+  // Replace with actual user ID
+  const userId = 'user123';
 
   useEffect(() => {
     // Fetch comment from Gemini API when the component mounts
@@ -68,17 +71,6 @@ const Layout: React.FC = ({ children }) => {
     }
   };
 
-  const pieData = {
-    labels: ['Red', 'Blue', 'Yellow'],
-    datasets: [
-      {
-        data: [300, 50, 100],
-        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
-        hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
-      },
-    ],
-  };
-
   return (
     <div className="container">
       <header className="header">
@@ -91,9 +83,7 @@ const Layout: React.FC = ({ children }) => {
         <p>{comment}</p>
         {/* Comment about connecting to Gemini API */}
         {/* This is where we need to connect to the Gemini API to fetch usage of time */}
-        <div className="pie-chart">
-          <Pie data={pieData} />
-        </div>
+        <PieChart userId={userId} />
         <div className="leaderboard">
           <h2>Leaderboard</h2>
           <ul>
