@@ -42,6 +42,16 @@ document.addEventListener('DOMContentLoaded', function() {
             alert('Please enter a college name.');
         }
     });
+    saveTimeGoalButton.addEventListener('click', function() {
+        const saveTIme = goal-time.value.trim();
+        if (saveTIme) {
+            // roast
+            alert('College name saved: ' + collegeName);
+            updateLeaderboard(collegeName);
+        } else {
+            alert('Please enter a college name.');
+        }
+    });
 
     // Function to update the leaderboard with the given college name
     function updateLeaderboard(collegeName) {
