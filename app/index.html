@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <div>
+    <title>Persistent Notification Prompt</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="notification-prompt">
+        Please allow notifications to continue.
+        <button id="allow-button">Allow</button>
+    </div>
+    <div id="notification-denied" class="popup">
+        Notifications are disabled. Please enable them to continue.
+        <span id="close-popup" class="close">&times;</span>
+    </div>
+
+    <script src="notification.js"></script>
+  </div>
+<div>
+  <button class="tab-button" data-tab="bonus">Menu</button>
+  <div class="dropdown-content">
+    <a href="#option1"id="user-name"></a>
+
+    <div id="option2">
+      <label for="college-input">College:</label>
+      <input type="text" id="college-input" placeholder="Enter your college name">
+
+      <button id="save-college">Save</button>
+      <ul id="college-list"></ul>
+
+    <a href="#option3">Set </a>
+  </div>
+</div>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Life’s Too Short</title>
+  <link rel="stylesheet" href="../styles/styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>Life’s Too Short</h1>
+    <div id="genAI-reply">GenAI Reply Placeholder</div>
+    <div id="piechart"></div>
+    <h2 id="leaderboardtitel">Leaderboard</h2>
+    <div id="leaderboard"></div>
+    <div id="music-channel">
+      <button onclick="playMusic()">Play</button>
+      <button onclick="pauseMusic()">Pause</button>
+      <button onclick="stopMusic()">Stop</button>
+    </div>
+  </div>
+  <script src="genAI.js"></script>
+  <script src="piechart.js"></script>
+   <script src="leaderboard.js"></script>
+  <script src="music.js"></script>
+  <div id="leaderboard">Leaderboard for [College Name]</div>
+  <script src="components/dropdownMenu.js"></script>
+</body>
+</html>
